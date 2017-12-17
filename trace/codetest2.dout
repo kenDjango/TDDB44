@@ -1,0 +1,145 @@
+L3:			# FOO
+		push	rbp
+		mov	rcx, rsp
+		push	rcx
+		mov	rbp, rcx
+		sub	rsp, 192
+		mov	rax, 3
+		mov	rcx, [rbp-8]
+		mov	[rcx-48], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-48]
+		mov	rcx, [rbp-8]
+		mov	[rcx-16], rax
+		mov	rax, 1
+		mov	rcx, [rbp-8]
+		mov	[rcx-56], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-16]
+		mov	rcx, [rbp-8]
+		mov	rcx, [rcx-56]
+		add	rax, rcx
+		mov	rcx, [rbp-8]
+		mov	[rcx-64], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-64]
+		mov	rcx, [rbp-8]
+		mov	[rcx-24], rax
+		mov	rax, 4620130267728707584
+		mov	rcx, [rbp-8]
+		mov	[rcx-72], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-72]
+		mov	rcx, [rbp-8]
+		mov	[rcx-32], rax
+		mov	rax, 1
+		mov	rcx, [rbp-8]
+		mov	[rcx-80], rax
+		mov	rcx, [rbp-8]
+		fild	qword ptr [rcx-80]
+		mov	rcx, [rbp-8]
+		fstp	qword ptr [rcx-88]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-32]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-88]
+		faddp
+		mov	rcx, [rbp-8]
+		fstp	qword ptr [rcx-96]
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-96]
+		mov	rcx, [rbp-8]
+		mov	[rcx-40], rax
+		mov	rax, -1
+		mov	rcx, [rbp-8]
+		mov	[rcx-104], rax
+		mov	rax, 4
+		mov	rcx, [rbp-8]
+		mov	[rcx-112], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-104]
+		mov	rcx, [rbp-8]
+		mov	rcx, [rcx-112]
+		cmp	rax, rcx
+		jl	L7
+		mov	rax, 0
+		jmp	L8
+		L7:
+		mov	rax, 1
+		L8:
+		mov	rcx, [rbp-8]
+		mov	[rcx-120], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-120]
+		cmp	rax, 0
+		je	L5
+		mov	rax, 5
+		mov	rcx, [rbp-8]
+		mov	[rcx-128], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-24]
+		mov	rcx, [rbp-8]
+		mov	rcx, [rcx-128]
+		add	rax, rcx
+		mov	rcx, [rbp-8]
+		mov	[rcx-136], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-136]
+		mov	rcx, [rbp-8]
+		mov	[rcx-16], rax
+L5:
+		mov	rax, 4607182418800017408
+		mov	rcx, [rbp-8]
+		mov	[rcx-144], rax
+		mov	rax, 1
+		mov	rcx, [rbp-8]
+		mov	[rcx-152], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-152]
+		neg	rax
+		mov	rcx, [rbp-8]
+		mov	[rcx-160], rax
+		mov	rcx, [rbp-8]
+		fild	qword ptr [rcx-160]
+		mov	rcx, [rbp-8]
+		fstp	qword ptr [rcx-168]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-168]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-144]
+		fcomip	ST(0), ST(1)
+		fstp	ST(0)
+		ja	L9
+		mov	rax, 0
+		jmp	L10
+		L9:
+		mov	rax, 1
+		L10:
+		mov	rcx, [rbp-8]
+		mov	[rcx-176], rax
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-176]
+		cmp	rax, 0
+		je	L6
+		mov	rax, 1
+		mov	rcx, [rbp-8]
+		mov	[rcx-184], rax
+		mov	rcx, [rbp-8]
+		fild	qword ptr [rcx-184]
+		mov	rcx, [rbp-8]
+		fstp	qword ptr [rcx-192]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-40]
+		mov	rcx, [rbp-8]
+		fld	qword ptr [rcx-192]
+		faddp
+		mov	rcx, [rbp-8]
+		fstp	qword ptr [rcx-200]
+		mov	rcx, [rbp-8]
+		mov	rax, [rcx-200]
+		mov	rcx, [rbp-8]
+		mov	[rcx-40], rax
+L6:
+L4:
+		leave
+		ret

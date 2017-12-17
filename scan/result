@@ -1,0 +1,7 @@
+Scanned T_PROGRAM 'program' (1, 0)
+Scanned T_REALNUM '3.3' (2, 0) <yylval.rval = 3.3>
+Scanned T_INTNUM '5' (2, 4) <yylval.ival = 5>
+Scanned T_REALNUM '7.8e4' (2, 6) <yylval.rval = 78000>
+Scanned T_REALNUM '4E10' (2, 12) <yylval.rval = 4e+10>
+Scanned T_REALNUM '.1e-4' (2, 17) <yylval.rval = 1e-05>
+End of file

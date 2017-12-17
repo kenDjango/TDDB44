@@ -1,0 +1,42 @@
+Symbol table will be printed after compilation.
+Generating assembler, global level
+7GLOBAL.4VOID7INTEGER4REAL4READ5WRITE7INT-ARG5TRUNC8REAL-ARG3FOO1I1A1R1V8$1      8$2      8$3      8$4      8$5      8$6      8$7      8$8      8$9      8$10     8$11     8$12     8$13     8$14     8$15     8$16     8$17     8$18     8$19     8$20     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------^ (pool_pos = 252)
+
+Symbol table (size = 33):
+Pos  Name      Lev Hash Back Offs Type      Tag
+-----------------------------------------------
+  0: GLOBAL.     0   -1  159    0 GLOBAL.   SYM_PROC      lbl = -1 ar_size = 0  
+  1: VOID        0   -1   82    0 VOID      SYM_NAMETYPE  
+  2: INTEGER     0   -1  462    0 VOID      SYM_NAMETYPE  
+  3: REAL        0   -1  324    0 VOID      SYM_NAMETYPE  
+  4: READ        0   -1  316    0 INTEGER   SYM_FUNC      lbl = 0  ar_size = 0  
+  5: WRITE       0   -1  139    0 VOID      SYM_PROC      lbl = 1  ar_size = 0  
+  6: INT-ARG     0   -1  210    0 INTEGER   SYM_PARAM     
+  7: TRUNC       0   -1  332    0 INTEGER   SYM_FUNC      lbl = 2  ar_size = 0  
+  8: REAL-ARG    0   -1  427    0 REAL      SYM_PARAM     
+  9: FOO         0   -1   68    0 VOID      SYM_PROC      lbl = 3  ar_size = 192
+ 10: I           1   -1   73    0 INTEGER   SYM_VAR       
+ 11: A           1   -1   65    8 INTEGER   SYM_VAR       
+ 12: R           1   -1   82   16 REAL      SYM_VAR       
+ 13: V           1   -1   86   24 REAL      SYM_VAR       
+ 14: $1          1   -1  341   32 INTEGER   SYM_VAR       
+ 15: $2          1   -1   22   40 INTEGER   SYM_VAR       
+ 16: $3          1   -1  215   48 INTEGER   SYM_VAR       
+ 17: $4          1   -1  408   56 REAL      SYM_VAR       
+ 18: $5          1   -1   89   64 INTEGER   SYM_VAR       
+ 19: $6          1   -1  282   72 REAL      SYM_VAR       
+ 20: $7          1   -1  475   80 REAL      SYM_VAR       
+ 21: $8          1   -1  156   88 INTEGER   SYM_VAR       
+ 22: $9          1   -1  349   96 INTEGER   SYM_VAR       
+ 23: $10         1   -1  357  104 INTEGER   SYM_VAR       
+ 24: $11         1   -1    6  112 INTEGER   SYM_VAR       
+ 25: $12         1   -1  167  120 INTEGER   SYM_VAR       
+ 26: $13         1   -1  328  128 REAL      SYM_VAR       
+ 27: $14         1   -1  489  136 INTEGER   SYM_VAR       
+ 28: $15         1   -1  138  144 INTEGER   SYM_VAR       
+ 29: $16         1   -1  299  152 REAL      SYM_VAR       
+ 30: $17         1   -1  460  160 INTEGER   SYM_VAR       
+ 31: $18         1   -1  109  168 INTEGER   SYM_VAR       
+ 32: $19         1   -1  270  176 REAL      SYM_VAR       
+ 33: $20         1   -1   38  184 REAL      SYM_VAR       

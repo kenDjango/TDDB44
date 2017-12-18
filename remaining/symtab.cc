@@ -171,8 +171,17 @@ long symbol_table::get_next_label()
    an error. This method is used for quad generation. */
 sym_index symbol_table::gen_temp_var(sym_index type)
 {
-    /* Your code here */
-    return NULL_SYM;
+    string name;
+    if(type == void_type){
+      fatal("Void type not allowed: symbol_table::gen_temp_var");
+    }
+    if(temp_nr > MAX_TEMP_VARS){
+      fatal("Exceeded the max number of variable: 1 000 000");
+    }
+    temp_nr++;
+    name = "$" + to_string(temp_nr);
+    pool_index p_index = pool_install(&name[0]);
+    return enter_variable(p_index, type);
 }
 
 

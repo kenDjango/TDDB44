@@ -129,7 +129,6 @@ sym_index ast_elsif_list::generate_quads(quad_list &q)
 sym_index ast_elsif::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
     return NULL_SYM;
 }
 
@@ -137,24 +136,25 @@ sym_index ast_elsif::generate_quads(quad_list &q)
 sym_index ast_id::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return sym_p;
 }
 
 
 sym_index ast_integer::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index new_index = sym_tab->gen_temp_var(integer_type);
+    q += new quadruple(q_iload, value, NULL_SYM, new_index);
+    return new_index;
 }
 
 
 sym_index ast_real::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index new_index = sym_tab->gen_temp_var(real_type);
+    q += new quadruple(q_rload, value, NULL_SYM, new_index);
+    return new_index;
 }
 
 
@@ -169,115 +169,147 @@ sym_index ast_real::generate_quads(quad_list &q)
 sym_index ast_not::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index new_index = sym_tab->gen_temp_var(integer_type);
+    sym_index expr_value = expr->generate_quads(q);
+    q += new quadruple(q_inot, expr_value, NULL_SYM, new_index);
+    return new_index;
 }
 
 
 sym_index ast_uminus::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index expr_value = expr->generate_quads(q);
+    sym_index new_index;
+    if (expr->type == integer_type){
+        new_index = sym_tab->gen_temp_var(integer_type);
+        q += new quadruple(q_iuminus, expr_value, NULL_SYM, new_index);
+    }
+    else if (expr->type == real_type){
+        new_index = sym_tab->gen_temp_var(real_type);
+        q += new quadruple(q_ruminus, expr_value, NULL_SYM, new_index);
+    }
+    else fatal("TIllegal type in ast_uminus::generate_assignment()");
+    return new_index;
 }
 
 
 sym_index ast_cast::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index expr_value = expr->generate_quads(q);
+    sym_index new_index;
+    if (type == real_type){
+        new_index = sym_tab->gen_temp_var(integer_type);
+        q += new quadruple(q_itor, expr_value, NULL_SYM, new_index);
+    }
+    else fatal("Illegal type in ast_cast::generate_assignment()");
+    return new_index;
+}
+
+
+sym_index genrerate_quads_bin_op(quad_list &q,ast_binaryoperation * bin_op,quad_op_type int_op,quad_op_type real_op){
+    sym_index left = bin_op->left->generate_quads(q);
+    sym_index right = bin_op->right->generate_quads(q);
+    sym_index new_index = sym_tab->gen_temp_var(bin_op->type);
+    if (bin_op->left->type == integer_type && bin_op->right->type == integer_type){
+        q += new quadruple(int_op, left, right, new_index);
+    }
+    else if (bin_op->left->type == real_type && bin_op->right->type == real_type){
+        q += new quadruple(real_op, left, right, new_index);
+    }
+    else fatal("Can't apply the operation on the given type");
+
+    return new_index;
 }
 
 
 sym_index ast_add::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q,this,q_iplus,q_rplus);
 }
 
 sym_index ast_sub::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_iminus, q_rminus);
 }
 
 sym_index ast_mult::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_imult, q_rmult);
 }
 
 sym_index ast_divide::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_rdivide, q_rdivide);
 }
 
 sym_index ast_idiv::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_idivide, q_idivide);
 }
 
 sym_index ast_mod::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_imod, q_imod);
 }
 
 sym_index ast_or::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_ior, q_ior);
 }
 
 sym_index ast_and::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_op(q, this, q_iand, q_iand);
 }
 
+sym_index genrerate_quads_bin_rel(quad_list &q,ast_binaryrelation *bin_rel,quad_op_type int_op,quad_op_type real_op){
+    sym_index new_index = sym_tab->gen_temp_var(bin_rel->type);
+    sym_index left = bin_rel->left->generate_quads(q);
+    sym_index right = bin_rel->right->generate_quads(q);
 
+    if (bin_rel->left->type == integer_type && bin_rel->right->type == integer_type){
+        q += new quadruple(int_op, left, right, new_index);
+    }
+    else if (bin_rel->left->type == real_type && bin_rel->right->type == real_type){
+        q += new quadruple(real_op, left, right, new_index);
+    }
+      else fatal("Can't apply the operation on the given type");
+    return new_index;
+}
 
 sym_index ast_equal::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_rel(q, this, q_ieq, q_req);
 }
 
 sym_index ast_notequal::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_rel(q, this, q_ine, q_rne);
 }
 
 sym_index ast_lessthan::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_rel(q, this, q_ilt, q_rlt);
 }
 
 sym_index ast_greaterthan::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    return genrerate_quads_bin_rel(q, this, q_igt, q_rgt);
 }
-
-
-
 
 /* Since an lvalue can be either an id or an array reference, we can't solve
    this the usual way since there's no instanceof operator in C++ to find out
@@ -332,7 +364,14 @@ void ast_expr_list::generate_parameter_list(quad_list &q,
         int *nr_params)
 {
     USE_Q;
-    /* Your code here */
+    if (last_expr != NULL){
+      *nr_params += 1;
+      sym_index param_index = last_expr->generate_quads(q);
+      q += new quadruple(q_param, param_index, NULL_SYM, NULL_SYM);
+    }
+    if (preceding != NULL){
+      preceding->generate_parameter_list(q,last_param->preceding,nr_params);
+    }
 }
 
 
@@ -340,7 +379,13 @@ void ast_expr_list::generate_parameter_list(quad_list &q,
 sym_index ast_procedurecall::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
+    int param_size = 0;
+    if(parameter_list != NULL){
+      parameter_symbol * last_param = sym_tab->get_symbol(this->id->sym_p)->get_procedure_symbol()->last_parameter;
+      parameter_list->generate_parameter_list(q,last_param,&param_size);
+    }
+
+    q += new quadruple(q_call,id->sym_p,param_size,NULL_SYM);
     return NULL_SYM;
 }
 
@@ -348,9 +393,15 @@ sym_index ast_procedurecall::generate_quads(quad_list &q)
 /* Generate quads for a function call. */
 sym_index ast_functioncall::generate_quads(quad_list &q)
 {
-    USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+  USE_Q;
+  int param_size = 0;
+  sym_index return_index = sym_tab->gen_temp_var(type);
+  if(parameter_list != NULL){
+    parameter_symbol * last_param = sym_tab->get_symbol(this->id->sym_p)->get_function_symbol()->last_parameter;
+    parameter_list->generate_parameter_list(q,last_param,&param_size);
+  }
+  q += new quadruple(q_call,id->sym_p,param_size,return_index);
+  return NULL_SYM;
 }
 
 
@@ -389,7 +440,12 @@ sym_index ast_while::generate_quads(quad_list &q)
 void ast_elsif::generate_quads_and_jump(quad_list &q, int label)
 {
     USE_Q;
-    /* Your code here */
+    sym_index end_block = sym_tab->get_next_label();
+    sym_index cond = condition->generate_quads(q);
+    q += new quadruple(q_jmpf, end_block, cond, NULL_SYM);
+    if(body != NULL) body->generate_quads(q);
+    q += new quadruple(q_jmp, label, NULL_SYM, NULL_SYM);
+    q += new quadruple(q_labl, end_block, NULL_SYM, NULL_SYM);
 }
 
 
@@ -398,7 +454,10 @@ void ast_elsif::generate_quads_and_jump(quad_list &q, int label)
 void ast_elsif_list::generate_quads_and_jump(quad_list &q, int label)
 {
     USE_Q;
-    /* Your code here */
+    if(preceding != NULL)
+      preceding->generate_quads_and_jump(q, label);
+    if(last_elsif != NULL)
+      last_elsif->generate_quads_and_jump(q, label);
 }
 
 
@@ -406,7 +465,22 @@ void ast_elsif_list::generate_quads_and_jump(quad_list &q, int label)
 sym_index ast_if::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
+    sym_index end_if = sym_tab->get_next_label();
+    sym_index end_block = sym_tab->get_next_label();
+    sym_index cond = condition->generate_quads(q);
+    q += new quadruple(q_jmpf, end_if, cond, NULL_SYM);
+    if (body != NULL) {
+        body->generate_quads(q);
+        if (elsif_list != NULL || else_body != NULL)
+            q += new quadruple(q_jmp,end_block,NULL_SYM,NULL_SYM);
+    }
+    q += new quadruple(q_labl,end_if,NULL_SYM, NULL_SYM);
+    if(elsif_list != NULL){
+        elsif_list->generate_quads_and_jump(q, end_block);
+    }
+    if(else_body != NULL)
+        else_body->generate_quads(q);
+    q += new quadruple(q_labl,end_block,NULL_SYM, NULL_SYM);
     return NULL_SYM;
 }
 
@@ -415,7 +489,15 @@ sym_index ast_if::generate_quads(quad_list &q)
 sym_index ast_return::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
+    if(value != NULL){
+      sym_index return_value = value->generate_quads(q);
+      if (value->type == integer_type)
+        q += new quadruple(q_ireturn, q.last_label, return_value, NULL_SYM);
+      else if (value->type == real_type)
+        q += new quadruple(q_rreturn, q.last_label, return_value, NULL_SYM);
+    }
+    else
+      q += new quadruple(q_jmp, q.last_label, NULL_SYM, NULL_SYM);
     return NULL_SYM;
 }
 
@@ -424,8 +506,18 @@ sym_index ast_return::generate_quads(quad_list &q)
 sym_index ast_indexed::generate_quads(quad_list &q)
 {
     USE_Q;
-    /* Your code here */
-    return NULL_SYM;
+    sym_index pos = index->generate_quads(q);
+    sym_index new_index;
+    if(type == integer_type){
+      new_index = sym_tab->gen_temp_var(integer_type);
+      q += new quadruple(q_irindex,id->sym_p,pos,new_index);
+    }
+    else if(type == real_type){
+      new_index = sym_tab->gen_temp_var(real_type);
+      q += new quadruple(q_rrindex,id->sym_p,pos,new_index);
+    }
+    else fatal ("Illegal type in ast_indexed::generate_quads()");
+    return new_index;
 }
 
 
@@ -788,8 +880,3 @@ ostream &operator<<(ostream &o, quad_list *q_list)
     }
     return o;
 }
-
-
-
-
-

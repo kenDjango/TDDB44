@@ -169,9 +169,13 @@ sym_index ast_real::generate_quads(quad_list &q)
 sym_index ast_not::generate_quads(quad_list &q)
 {
     USE_Q;
-    sym_index new_index = sym_tab->gen_temp_var(integer_type);
+    sym_index new_index;
     sym_index expr_value = expr->generate_quads(q);
-    q += new quadruple(q_inot, expr_value, NULL_SYM, new_index);
+    if(expr->type == integer_type){
+      new_index = sym_tab->gen_temp_var(integer_type);
+      q += new quadruple(q_inot, expr_value, NULL_SYM, new_index);
+    }
+
     return new_index;
 }
 
@@ -181,15 +185,15 @@ sym_index ast_uminus::generate_quads(quad_list &q)
     USE_Q;
     sym_index expr_value = expr->generate_quads(q);
     sym_index new_index;
-    if (expr->type == integer_type){
+    if(expr->type == integer_type){
         new_index = sym_tab->gen_temp_var(integer_type);
         q += new quadruple(q_iuminus, expr_value, NULL_SYM, new_index);
     }
-    else if (expr->type == real_type){
+    else if(expr->type == real_type){
         new_index = sym_tab->gen_temp_var(real_type);
         q += new quadruple(q_ruminus, expr_value, NULL_SYM, new_index);
     }
-    else fatal("TIllegal type in ast_uminus::generate_assignment()");
+    else fatal("Illegal type in ast_uminus::generate_assignment()");
     return new_index;
 }
 
@@ -208,7 +212,7 @@ sym_index ast_cast::generate_quads(quad_list &q)
 }
 
 
-sym_index genrerate_quads_bin_op(quad_list &q,ast_binaryoperation * bin_op,quad_op_type int_op,quad_op_type real_op){
+sym_index genrerate_quads_bin_op(quad_list & q, ast_binaryoperation * bin_op,quad_op_type int_op, quad_op_type real_op){
     sym_index left = bin_op->left->generate_quads(q);
     sym_index right = bin_op->right->generate_quads(q);
     sym_index new_index = sym_tab->gen_temp_var(bin_op->type);
@@ -219,96 +223,82 @@ sym_index genrerate_quads_bin_op(quad_list &q,ast_binaryoperation * bin_op,quad_
         q += new quadruple(real_op, left, right, new_index);
     }
     else fatal("Can't apply the operation on the given type");
-
     return new_index;
 }
 
 
-sym_index ast_add::generate_quads(quad_list &q)
-{
+sym_index ast_add::generate_quads(quad_list &q){
     USE_Q;
     return genrerate_quads_bin_op(q,this,q_iplus,q_rplus);
 }
 
-sym_index ast_sub::generate_quads(quad_list &q)
-{
+sym_index ast_sub::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_iminus, q_rminus);
+    return genrerate_quads_bin_op(q,this,q_iminus,q_rminus);
 }
 
-sym_index ast_mult::generate_quads(quad_list &q)
-{
+sym_index ast_mult::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_imult, q_rmult);
+    return genrerate_quads_bin_op(q,this,q_imult,q_rmult);
 }
 
-sym_index ast_divide::generate_quads(quad_list &q)
-{
+sym_index ast_divide::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_rdivide, q_rdivide);
+    return genrerate_quads_bin_op(q,this,q_rdivide,q_rdivide);
 }
 
-sym_index ast_idiv::generate_quads(quad_list &q)
-{
+sym_index ast_idiv::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_idivide, q_idivide);
+    return genrerate_quads_bin_op(q,this,q_idivide,q_idivide);
 }
 
-sym_index ast_mod::generate_quads(quad_list &q)
-{
+sym_index ast_mod::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_imod, q_imod);
+    return genrerate_quads_bin_op(q,this,q_imod,q_imod);
 }
 
-sym_index ast_or::generate_quads(quad_list &q)
-{
+sym_index ast_or::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_ior, q_ior);
+    return genrerate_quads_bin_op(q,this,q_ior,q_ior);
 }
 
-sym_index ast_and::generate_quads(quad_list &q)
-{
+sym_index ast_and::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_op(q, this, q_iand, q_iand);
+    return genrerate_quads_bin_op(q,this,q_iand,q_iand);
 }
 
-sym_index genrerate_quads_bin_rel(quad_list &q,ast_binaryrelation *bin_rel,quad_op_type int_op,quad_op_type real_op){
-    sym_index new_index = sym_tab->gen_temp_var(bin_rel->type);
+sym_index genrerate_quads_bin_rel(quad_list & q, ast_binaryrelation * bin_rel,quad_op_type int_op, quad_op_type real_op){
     sym_index left = bin_rel->left->generate_quads(q);
     sym_index right = bin_rel->right->generate_quads(q);
-
+    sym_index new_index = sym_tab->gen_temp_var(bin_rel->type);
     if (bin_rel->left->type == integer_type && bin_rel->right->type == integer_type){
         q += new quadruple(int_op, left, right, new_index);
     }
     else if (bin_rel->left->type == real_type && bin_rel->right->type == real_type){
         q += new quadruple(real_op, left, right, new_index);
     }
-      else fatal("Can't apply the operation on the given type");
+    else fatal("Can't apply the operation on the given type");
     return new_index;
 }
 
-sym_index ast_equal::generate_quads(quad_list &q)
-{
+sym_index ast_equal::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_rel(q, this, q_ieq, q_req);
+    return genrerate_quads_bin_rel(q,this,q_ieq,q_req);
 }
 
-sym_index ast_notequal::generate_quads(quad_list &q)
-{
+sym_index ast_notequal::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_rel(q, this, q_ine, q_rne);
+    return genrerate_quads_bin_rel(q,this,q_ine,q_rne);
 }
 
-sym_index ast_lessthan::generate_quads(quad_list &q)
-{
+sym_index ast_lessthan::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_rel(q, this, q_ilt, q_rlt);
+    return genrerate_quads_bin_rel(q,this,q_ilt,q_rlt);
 }
 
-sym_index ast_greaterthan::generate_quads(quad_list &q)
-{
+sym_index ast_greaterthan::generate_quads(quad_list &q){
     USE_Q;
-    return genrerate_quads_bin_rel(q, this, q_igt, q_rgt);
+    return genrerate_quads_bin_rel(q,this,q_igt,q_rgt);
 }
 
 /* Since an lvalue can be either an id or an array reference, we can't solve

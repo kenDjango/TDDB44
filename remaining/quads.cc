@@ -383,15 +383,19 @@ sym_index ast_procedurecall::generate_quads(quad_list &q)
 /* Generate quads for a function call. */
 sym_index ast_functioncall::generate_quads(quad_list &q)
 {
-  USE_Q;
-  int param_size = 0;
-  sym_index return_index = sym_tab->gen_temp_var(type);
-  if(parameter_list != NULL){
-    parameter_symbol * last_param = sym_tab->get_symbol(this->id->sym_p)->get_function_symbol()->last_parameter;
-    parameter_list->generate_parameter_list(q,last_param,&param_size);
-  }
-  q += new quadruple(q_call,id->sym_p,param_size,return_index);
-  return NULL_SYM;
+    USE_Q;
+    int nb_param = 0;
+    sym_index new_index;
+    if (type == integer_type || type == real_type){
+        new_index = sym_tab->gen_temp_var(type);
+    }
+
+    if (parameter_list != NULL){
+        parameter_symbol * params = sym_tab->get_symbol(this->id->sym_p)->get_function_symbol()->last_parameter;
+        parameter_list->generate_parameter_list(q, params, &nb_param);
+    }
+    q += new quadruple(q_call, id->sym_p, nb_param, new_index);
+    return new_index;
 }
 
 

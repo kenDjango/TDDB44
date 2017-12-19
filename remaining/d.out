@@ -1,5 +1,5 @@
 L4:			# FOO
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		fcomip	ST(0), ST(1)
 		fstp	ST(0)
 		jb	L11
@@ -13,11 +13,11 @@ L4:			# FOO
 		mov	rax, 1
 		add	rax, rcx
 		mov	rax, 1
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		fsubp
 		jmp	L7
 L6:
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		fcomip	ST(0), ST(1)
 		fstp	ST(0)
 		jne	L13
@@ -53,7 +53,7 @@ L9:
 		mov	rax, 7
 L10:
 		mov	rax, 1
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		faddp
 		mov	rax, 33
 L7:
@@ -79,13 +79,13 @@ L3:			# QUADTEST
 		sub	rax, rcx
 		mov	[rcx], rax
 		mov	rax, 3
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		mov	rax, 4
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		mov	rax, 4
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		mov	rax, 2
-		fild	qword ptr [rcx+2000906256]
+		fild	qword ptr [rcx+1586493248]
 		fdivp
 		faddp
 		mov	rax, 3

@@ -62,8 +62,7 @@ Quad list for global level
    15    q_rassign  $30        -          X          
    16    q_param    X          -          -          
    17    q_call     TRUNC      1          $31        
-   18    q_iassign  (null)     
--          I          
+   18    q_iassign  $31        -          I          
    19    q_iload    4          -          $32        
    20    q_itor     $32        -          $33        
    21    q_iload    4          -          $34        
@@ -78,8 +77,7 @@ Quad list for global level
    30    q_imult    $41        I          $42        
    31    q_param    $42        -          -          
    32    q_call     FOO        2          $40        
-   33    q_iassign  (null)     
--          I          
+   33    q_iassign  $40        -          I          
    34    q_labl     19         -          -          
 
 Generating assembler, global level

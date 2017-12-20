@@ -1,0 +1,82 @@
+2a3
+> No type checking will be performed.
+24,25c25,26
+<     | |   | +-Sub (left, right) [INTEGER]
+<     | |   |   +-Add (left, right) [INTEGER]
+---
+>     | |   | +-Sub (left, right) [VOID]
+>     | |   |   +-Add (left, right) [VOID]
+36c37
+<     |   +-Sub (left, right) [INTEGER]
+---
+>     |   +-Sub (left, right) [VOID]
+43c44
+<       +-Sub (left, right) [INTEGER]
+---
+>       +-Sub (left, right) [VOID]
+99,101c100,101
+< | | | |   +-Cast [REAL]
+< | | | |     +-Unary minus (expr) [INTEGER]
+< | | | |       +-Id (I) [INTEGER]
+---
+> | | | |   +-Unary minus (expr) [INTEGER]
+> | | | |     +-Id (I) [INTEGER]
+104c104
+< | | |   +-Idiv (left, right) [INTEGER]
+---
+> | | |   +-Idiv (left, right) [VOID]
+109,113c109,111
+< | |   +-Divide (left, right) [REAL]
+< | |     +-Cast [REAL]
+< | |     | +-Id (I) [INTEGER]
+< | |     +-Cast [REAL]
+< | |       +-Id (J) [INTEGER]
+---
+> | |   +-Divide (left, right) [VOID]
+> | |     +-Id (I) [INTEGER]
+> | |     +-Id (J) [INTEGER]
+118c116
+<   +-And (left, right) [INTEGER]
+---
+>   +-And (left, right) [VOID]
+121,122c119
+<   | | +-Cast [REAL]
+<   | |   +-Id (I) [INTEGER]
+---
+>   | | +-Id (I) [INTEGER]
+145,146c142
+<   | |   +-Cast [REAL]
+<   | |     +-Integer [0]
+---
+>   | |   +-Integer [0]
+149,150c145
+<   |   +-Cast [REAL]
+<   |     +-Integer [0]
+---
+>   |   +-Integer [0]
+170,171c165
+< | | |   +-Cast [REAL]
+< | | |     +-Integer [1]
+---
+> | | |   +-Integer [1]
+187c181
+<     | | | +-Idiv (left, right) [INTEGER]
+---
+>     | | | +-Idiv (left, right) [VOID]
+191,196c185,188
+<     | +-Divide (left, right) [REAL]
+<     |   +-Cast [REAL]
+<     |   | +-Integer [1]
+<     |   +-Cast [REAL]
+<     |     +-Integer [2]
+<     +-Add (left, right) [REAL]
+---
+>     | +-Divide (left, right) [VOID]
+>     |   +-Integer [1]
+>     |   +-Integer [2]
+>     +-Add (left, right) [VOID]
+198,199c190
+<       +-Cast [REAL]
+<         +-Integer [7]
+---
+>       +-Integer [7]

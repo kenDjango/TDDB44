@@ -4,9 +4,9 @@
 #include <string.h>
 
 
-//#include "scanner.hh"
-#include "ast.hh"
-#include "parser.hh"
+#include "scanner.hh"
+//#include "ast.hh"
+//#include "parser.hh"
 // This is where you put #include directives as needed for later labs.
 // include "ast.hh", parser.hh" in that order
 
@@ -27,8 +27,8 @@ extern YYLTYPE yylloc; // Used for position information, see below.
 %x c_comment
 %x d_comment
 DIGIT [0-9]
-FLOAT_1 ({DIGIT}+|{DIGIT}*)\.{DIGIT}*([eE][+-]?{DIGIT}*)?{DIGIT}*
-FLOAT_2 {DIGIT}+[eE][-+]?{DIGIT}+
+FLOAT (({DIGIT}*\.{DIGIT}+|{DIGIT}+\.{DIGIT}*)([eE][+-]?[0-9]+)?|{DIGIT}+([eE][+-]?[0-9]+))
+
 
 /* {DIGIT}+"."{DIGIT}*
  ID [a-z][a-z0-9]* */
@@ -291,20 +291,11 @@ procedure                {
                             return T_PROCEDURE;
                          }
 
-
-{FLOAT_1}                {
+{FLOAT}                {
                             yylloc.first_line = yylineno;
                             yylloc.first_column = column;
                             column += yyleng;
-                            yylval.rval = stof(yytext);
-                            return T_REALNUM;
-                          }
-
-{FLOAT_2}                {
-                            yylloc.first_line = yylineno;
-                            yylloc.first_column = column;
-                            column += yyleng;
-                            yylval.rval = stof(yytext);
+                            yylval.rval = atof(yytext);
                             return T_REALNUM;
                          }
 
@@ -316,6 +307,19 @@ procedure                {
                             return T_INTNUM;
                          }
 
+'(''|[^'\n])*'           {
+                            yylloc.first_line = yylineno;
+                            yylloc.first_column = column;
+                            column += yyleng;
+                            yylval.str = sym_tab->pool_install(sym_tab->fix_string(yytext));
+                            return T_STRINGCONST;
+                          }
+
+'([^'\n]|'')*\n          {
+                            column = 0;
+                            yyerror("Newline in string");
+                         }
+
 [_a-z][_a-z0-9]*         {
                             yylloc.first_line = yylineno;
                             yylloc.first_column = column;
@@ -323,16 +327,6 @@ procedure                {
                             yylval.pool_p = sym_tab->pool_install(sym_tab->capitalize(yytext));
                             return T_IDENT;
                          }
-
-
-'(''|[^'\n])*'           {
-                            yylloc.first_line = yylineno;
-                            yylloc.first_column = column;
-                            column += yyleng;
-                            yylval.str = sym_tab->pool_install(sym_tab->fix_string(yytext));
-                            return T_STRINGCONST;
-                         }
-
 
 \/\/.*$                  column = 0; /* Skip single-line comment */
 "/\*"                    {
